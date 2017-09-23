@@ -1,0 +1,18 @@
+{
+	"name": "adrian0350/php-daemon",
+	"description": "Bring workers to your web projects using PHP!",
+	"type": "library",
+	"keywords": ["Daemon", "PHP", "Script"],
+	"homepage": "https://github.com/Adrian0350/PHPDaemon",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Jaime Zúñiga",
+			"email": "jaime.ziga@gmail.com",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"php": ">=5.0"
+	}
+}
