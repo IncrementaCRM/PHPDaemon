@@ -22,7 +22,7 @@ Add this library to your [composer](https://packagist.org/packages/adrian0350/ph
 In composer.json:
 ```json
   "require": {
-    "adrian0350/php-daemon.php": "1.*"
+    "adrian0350/php-daemon": "1.*"
   }
 ```
 
