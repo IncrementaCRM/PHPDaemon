@@ -10,7 +10,8 @@ Also script output (log) will be logged the same way as does the `.pid` file.
 (For now this is the only way it works).
 
 **Example:**
-For `/your/daemon/path/to/file.php` would be `/your/daemon/path/to/.file.php.pid`.
+For the **pid** `/your/daemon/path/to/file.php` would be `/your/daemon/path/to/.file.php.pid`
+and for the **log** `/your/daemon/path/to/file.php` would be `/your/daemon/path/to/.file.php.log`.
 
 ### PHP Version
 
