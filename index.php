@@ -72,5 +72,5 @@ else
 // else
 // {
 // 	// Print out error message.
-// 	echo $PHPDaemon->errors['message'];
+// 	echo $PHPDaemon->errors['message'].PHP_EOL;
 // }
