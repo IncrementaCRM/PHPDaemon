@@ -34,7 +34,7 @@ $binary = '/opt/local/bin/php';
  *
  * @var string $script Filepath & filename.
  */
-$script = dirname(__FILE__).'/daemon/test.php';
+$script = dirname(__FILE__).'/daemon/example.php';
 
 /***************************************************
 * †††††††††††††††††††††††††††††††††††††††††††††††††
