@@ -76,7 +76,7 @@ $PHPDaemon = new PHPDaemon($script, $binary);
 ### Usage — instance handling
 ```
 // First off we want to check if there isn't a
-// script running already and cut it's head.
+// script running already and cut its head.
 if ($PHPDaemon->isAlive())
 {
 	echo mb_convert_encoding('&#x1F608;', 'UTF-8', 'HTML-ENTITIES');
