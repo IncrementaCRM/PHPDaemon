@@ -5,13 +5,7 @@
 ***************************************************/
 
 // Start by including the class (if 1 level down).
-include_once dirname(__FILE__).'/src/PHPDaemon.php';
-
-// Every body enjoys control…
-if (!class_exists('PHPDaemon'))
-{
-	throw new Exception('Missing class "PHPDaemon"');
-}
+include_once dirname(__FILE__).'/lib/PHPDaemon.php';
 
 /***************************************************
 * Prepare arguments.
@@ -41,7 +35,7 @@ $script = dirname(__FILE__).'/daemon/example.php';
 ***************************************************/
 
 // Instance receives 2 arguments.
-$PHPDaemon = new PHPDaemon($script, $binary);
+$PHPDaemon = new PHPDaemon\PHPDaemon($script, $binary);
 
 // First off we want to check if there isn't a
 // script running already and cut its head.

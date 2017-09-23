@@ -1,5 +1,9 @@
 <?php
 
+namespace PHPDaemon;
+
+use Exception;
+
 /**
  * Creates a 'daemon' with a given script.
  * Serves as a wrapper to execute scripts and

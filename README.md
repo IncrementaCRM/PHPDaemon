@@ -15,7 +15,7 @@ and for the **log** `/your/daemon/path/to/file.php` would be `/your/daemon/path/
 
 ### PHP Version
 
-This class is compatible with **PHP 5.0 and above**.
+This class is compatible with **PHP 5.3.0 and above** due to the use of namespaces.
 
 ### Installing
 Add this library to your [composer](https://packagist.org/packages/adrian0350/php-daemon) configuration.
@@ -37,14 +37,10 @@ $ composer require adrian0350/php-daemon
 For usage just call the methods from your PHPDaemon instance object.
 ```
 <?php
-// Start by including the class (if 1 level down).
-include_once dirname(__FILE__).'/src/PHPDaemon.php';
 
-// Every body enjoys control…
-if (!class_exists('PHPDaemon'))
-{
-	throw new Exception('Missing class "PHPDaemon"');
-}
+// Start by including the class (if 1 level down).
+include_once dirname(__FILE__).'/lib/PHPDaemon.php';
+
 ```
 ### Usage — instantiating
 Prepare two arguments you'll need.
@@ -71,7 +67,7 @@ $binary = '/opt/local/bin/php';
 $script = dirname(__FILE__).'/daemon/test.php';
 
 // Instance receives 2 arguments.
-$PHPDaemon = new PHPDaemon($script, $binary);
+$PHPDaemon = new PHPDaemon\PHPDaemon($script, $binary);
 ```
 ### Usage — instance handling
 ```
