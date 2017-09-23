@@ -2,7 +2,7 @@
 <?php
 
 /***************************************************
-* Daemon Test
+* Daemon Example
 ***************************************************/
 
 // Just start a forever loop with an ouput.
