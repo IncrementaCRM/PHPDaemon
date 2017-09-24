@@ -278,13 +278,8 @@ class PHPDaemon
 	 * @throws Exception Could not save pid.
 	 * @return boolean
 	 */
-	public function start($script = '')
+	public function start()
 	{
-		if ($script)
-		{
-			$this->setScript($script);
-		}
-
 		$initialized = false;
 		try
 		{
