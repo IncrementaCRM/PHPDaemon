@@ -4,14 +4,16 @@ With PHPDaemon you'll be able to run simple one-time daemons in any case
 you find yourself in a situation where you need to run an external script,
 meaning you need a Helper in your web project or what not.
 
-This class works by storing a pid **inside** your script's `filepath` and with the `filename`
-starting with a dot `.` at the beginning and with a `.pid` at the ending of the `filename`.
-Also script output (log) will be logged the same way as does the `.pid` file.
-(For now this is the only way it works).
+This class works by storing a pid **inside** Linux's default daemon dir `/var/run/` as `script_file.pid`
+Script output (logging) will be set in `$options` with the keys `(boolean) log` and `(string) log_path`.
+If `log` is set to true and no `log_path` is provided or is invalid it will log in the script's directory.
+If `log` is set to true and `log_path` is provided and valid it will log into the given log_path.
+**Log's name will be your `script_file` name ending with `.log`**.
+
 
 **Example:**
-For the **pid** `/your/daemon/path/to/file.php` would be `/your/daemon/path/to/.file.php.pid`
-and for the **log** `/your/daemon/path/to/file.php` would be `/your/daemon/path/to/.file.php.log`.
+For the **pid** `/your/daemon/path/to/script_file.php` would be `/var/run/script_file.php.pid`
+and for the **log** `/your/daemon/path/to/script_file.php` without a log_path, it would be `/your/daemon/path/to/script_file.php.log`.
 
 ### PHP Version
 
@@ -43,7 +45,7 @@ include_once dirname(__FILE__).'/lib/PHPDaemon.php';
 
 ```
 ### Usage — instantiating
-Prepare two arguments you'll need.
+Prepare three arguments you'll need.
 * Script's **compatible** binary file path.
 * Daemon script file path.
 ```

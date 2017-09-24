@@ -30,12 +30,21 @@ $binary = '/opt/local/bin/php';
  */
 $script = dirname(__FILE__).'/daemon/example.php';
 
+/**
+ * Logging options.
+ *
+ * @var array $options Includes log & log_path.
+ */
+$options = array(
+	'log' => true
+);
+
 /***************************************************
 * †††††††††††††††††††††††††††††††††††††††††††††††††
 ***************************************************/
 
 // Instance receives 2 arguments.
-$PHPDaemon = new PHPDaemon\PHPDaemon($script, $binary);
+$PHPDaemon = new PHPDaemon\PHPDaemon($script, $binary, $options);
 
 // First off we want to check if there isn't a
 // script running already and cut its head.
@@ -49,7 +58,8 @@ else
 	// Start the daemon else check errors.
 	if ($PHPDaemon->start())
 	{
-		echo 'You\'ve unleashed the beast!'.PHP_EOL;
+		echo PHP_EOL.'You\'ve unleashed the beast!  ';
+		echo mb_convert_encoding('&#x1F608;', 'UTF-8', 'HTML-ENTITIES').PHP_EOL;
 	}
 	else
 	{
@@ -57,14 +67,14 @@ else
 	}
 }
 
-// // Stoping and checking herrors.
-// if ($PHPDaemon->stop())
-// {
-// 	echo mb_convert_encoding('&#x1F608;', 'UTF-8', 'HTML-ENTITIES');
-// 	echo ' Your daemon has been stopped from deminishing the world!'.PHP_EOL;
-// }
-// else
-// {
-// 	// Print out error message.
-// 	echo $PHPDaemon->errors['message'].PHP_EOL;
-// }
+// Stoping and checking errors.
+if ($PHPDaemon->stop())
+{
+	echo mb_convert_encoding('&#x1F608;', 'UTF-8', 'HTML-ENTITIES');
+	echo ' Your daemon has been stopped from deminishing the world!'.PHP_EOL;
+}
+else
+{
+	// Print out error message.
+	echo $PHPDaemon->error['message'].PHP_EOL;
+}

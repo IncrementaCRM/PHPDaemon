@@ -31,10 +31,11 @@ class PHPDaemon
 
 	/**
 	 * Filename for pid storage.
+	 * Default standard dev run.
 	 *
 	 * @var string
 	 */
-	protected $pid = null;
+	protected $pid = '/var/run/';
 
 	/**
 	 * Script name.
@@ -51,39 +52,46 @@ class PHPDaemon
 	protected $script_path = null;
 
 	/**
-	 * Internal errors template.
+	 * Internal error template.
 	 *
 	 * @var array
 	 */
-	protected $_errors = array(
+	private $_error = array(
 		'code' => null,
 		'message' => null
 	);
 
 	/**
-	 * Class name will be used to name the log file.
-	 * {$this->name}.log
+	 * Log path if any given and log is set to true.
 	 * Defaults to /dev/null device.
 	 *
 	 * @var string
 	 */
-	protected $log = '/dev/null';
+	private $log_path = null;
 
 	/**
-	 * Public errors.
+	 * Weather to log daemon's output or not.
+	 *
+	 * @var string
+	 */
+	protected $log = true;
+
+	/**
+	 * Public error.
 	 *
 	 * @var mixed
 	 */
-	public $errors = null;
+	public $error = null;
 
 	/**
 	 * Class constructor.
 	 *
-	 * @param  string $script Script to start with.
-	 * @param  string $binary The binary to use.
+	 * @param  string $script  Script to start with.
+	 * @param  string $binary  The binary to use.
+	 * @param  array  $options Log and logpath options.
 	 * @return void
 	 */
-	public function __construct($script = '', $binary = '')
+	public function __construct($script = '', $binary = '', $options = array())
 	{
 		if ($script)
 		{
@@ -94,24 +102,47 @@ class PHPDaemon
 			$this->binary = $binary;
 		}
 
-		$this->initialize();
+		$this->initialize($options);
 	}
 
 	/**
 	 * Set pid file path and name from the script to exec.
 	 * Set log file path and name from the script to exec.
 	 *
-	 * @throws Exception Could not set pid.
+	 * @param  array $options Log options.
+	 * @throws Exception      Could not set pid.
+	 * @throws Exception      Could not set log.
 	 * @return void
 	 */
-	private function initialize()
+	private function initialize($options = array())
 	{
-		$this->pid = "{$this->script_path}.{$this->script}.pid";
-		$this->log = "{$this->script_path}.{$this->script}.log";
+		$this->pid = "{$this->pid}{$this->script}.pid";
 
-		if (!touch($this->pid) || !touch($this->log))
+		if (is_array($options) && !empty($options))
 		{
-			throw new Exception('Could not initialize, make sure '.$this->script.' path is writtable.');
+			$this->log      = isset($options['log']) ? (boolean) $options['log'] : false;
+			$this->log_path = isset($options['log_path']) ? (string) $options['log_path'] : '';
+		}
+		if ($this->log && !is_dir($this->log_path))
+		{
+			$this->log_path = "{$this->script_path}/{$this->script}.log";
+		}
+		else if ($this->log && is_dir($this->log_path))
+		{
+			$this->log_path = "{$this->log_path}/{$this->script}.log";
+		}
+		if (!$this->log)
+		{
+			$this->log_path = '/dev/null';
+		}
+
+		if (!touch($this->pid))
+		{
+			throw new Exception('Could not initialize process.');
+		}
+		if ($this->log && !touch($this->log_path))
+		{
+			throw new Exception('Could not initialize log.');
 		}
 	}
 
@@ -137,10 +168,10 @@ class PHPDaemon
 		catch (Exception $e)
 		{
 			$running = false;
-			$this->errors = array(
+			$this->error = array(
 				'code' => $e->getCode(),
 				'message' => $e->getMessage()
-			) + $this->_errors;
+			) + $this->_error;
 		}
 
 		return $running;
@@ -184,7 +215,7 @@ class PHPDaemon
 	 * @param  string $binary Binary path.
 	 * @return void
 	 */
-	public function setBinary($binary)
+	private function setBinary($binary)
 	{
 		$this->binary = $binary;
 	}
@@ -197,7 +228,7 @@ class PHPDaemon
 	 * @throws Exception Script is not running.
 	 * @return boolean
 	 */
-	public function setScript($script)
+	private function setScript($script)
 	{
 		$set = false;
 		try
@@ -206,14 +237,13 @@ class PHPDaemon
 			$this->script_path = str_replace($this->script, '', $script);
 
 			$set = true;
-			$this->initialize();
 		}
 		catch (Exception $e)
 		{
-			$this->errors = array(
+			$this->error = array(
 				'code' => $e->getCode(),
 				'message' => $e->getMessage()
-			) + $this->_errors;
+			) + $this->_error;
 		}
 
 		return $set;
@@ -259,7 +289,8 @@ class PHPDaemon
 		try
 		{
 
-			$daemon_command = "{$this->binary} {$this->script_path}{$this->script} > {$this->log} 2>&1 & echo $! &";
+			echo $this->log_path;
+			$daemon_command = "{$this->binary} {$this->script_path}{$this->script} > {$this->log_path} 2>&1 & echo $! &";
 			$daemon_pid     = exec($daemon_command, $output);
 
 			if (!$daemon_pid)
@@ -281,10 +312,10 @@ class PHPDaemon
 		}
 		catch (Exception $e)
 		{
-			$this->errors = array(
+			$this->error = array(
 				'code' => $e->getCode(),
 				'message' => $e->getMessage()
-			) + $this->_errors;
+			) + $this->_error;
 		}
 
 		return $initialized;
