@@ -1,3 +1,4 @@
 # Do not include these files.
 *.pid
 *.log
+.DS_Store
