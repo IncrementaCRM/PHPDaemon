@@ -36,7 +36,8 @@ $script = dirname(__FILE__).'/daemon/example.php';
  * @var array $options Includes log & log_path.
  */
 $options = array(
-	'log' => true
+	'log' => true,
+	'log_path' => '/Users/Adrian/Desktop'
 );
 
 /***************************************************
