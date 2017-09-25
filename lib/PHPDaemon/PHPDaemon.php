@@ -265,7 +265,7 @@ class PHPDaemon
 		try
 		{
 			$extracted         = $this->extract($script);
-			$this->script      = basename(substr($extracted['script'], 0, strpos($extracted['script'], ' ')));
+			$this->script      = basename($extracted['script']);
 			$this->arguments   = $extracted['arguments'];
 			$this->script_path = str_replace($this->script, '', $extracted['script']);
 
