@@ -52,6 +52,14 @@ class PHPDaemon
 	protected $script_path = null;
 
 	/**
+	 * Script's arguments.
+	 * Set to private because it might contain credentials.
+	 *
+	 * @var string
+	 */
+	private $arguments = '';
+
+	/**
 	 * Internal error template.
 	 *
 	 * @var array
@@ -221,6 +229,29 @@ class PHPDaemon
 	}
 
 	/**
+	 * Exxtracts arguments and script string.
+	 *
+	 * @var string $script The whole script with or without args.
+	 */
+	private function extract($script = '')
+	{
+		$extracted = array(
+			'script' => '',
+			'arguments' => ''
+		);
+		preg_match_all('/(\S+)/', $script, $matches);
+
+		if (isset($matches[0]))
+		{
+			$extracted['script'] = $matches[0][0];
+			unset($matches[0][0]);
+			$extracted['arguments'] = implode(' ', $matches[0]);
+		}
+
+		return $extracted;
+	}
+
+	/**
 	 * Set the script to then start().
 	 *
 	 * @param  string $script Dir with script name.
@@ -233,8 +264,10 @@ class PHPDaemon
 		$set = false;
 		try
 		{
-			$this->script      = basename($script);
-			$this->script_path = str_replace($this->script, '', $script);
+			$extracted         = $this->extract($script);
+			$this->script      = basename(substr($extracted['script'], 0, strpos($extracted['script'], ' ')));
+			$this->arguments   = $extracted['arguments'];
+			$this->script_path = str_replace($this->script, '', $extracted['script']);
 
 			$set = true;
 		}
@@ -283,9 +316,8 @@ class PHPDaemon
 		$initialized = false;
 		try
 		{
-
-			echo $this->log_path;
-			$daemon_command = "{$this->binary} {$this->script_path}{$this->script} > {$this->log_path} 2>&1 & echo $! &";
+			$daemon_command = "{$this->binary} {$this->script_path}{$this->script} {$this->arguments}";
+			$daemon_command = "{$daemon_command} > {$this->log_path} 2>&1 & echo $! &";
 			$daemon_pid     = exec($daemon_command, $output);
 
 			if (!$daemon_pid)
