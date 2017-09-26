@@ -45,7 +45,7 @@ $options = array(
 ***************************************************/
 
 // Instance receives 2 arguments.
-$PHPDaemon = new PHPDaemon\PHPDaemon($script, $binary, $options);
+$PHPDaemon = new PHPDaemon($script, $binary, $options);
 
 // First off we want to check if there isn't a
 // script running already and cut its head.
