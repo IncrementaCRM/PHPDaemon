@@ -4,7 +4,7 @@ With PHPDaemon you'll be able to run simple one-time daemons in any case
 you find yourself in a situation where you need to run an external script,
 meaning you need a Helper in your web project or what not.
 
-This class works by storing a pid **inside** Linux's default daemon dir `/var/run/` as `script_file.pid`.
+This class works by storing a pid **inside** your script's dir as `script_file.pid`.
 
 Script output (logging) will be set in `$options` with the keys `(boolean) log` and `(string) log_path`.
 
