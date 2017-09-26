@@ -21,7 +21,7 @@ and for the **log** `/your/daemon/path/to/script_file.php` without a log_path, i
 
 ### PHP Version
 
-This class is compatible with **PHP 5.3.0 and above** due to the use of namespaces.
+This class is compatible with **PHP 5 and above**.
 
 ### Installing
 Add this library to your [composer](https://packagist.org/packages/adrian0350/php-daemon) configuration.
