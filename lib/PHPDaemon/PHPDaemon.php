@@ -67,7 +67,7 @@ class PHPDaemon
 	 *
 	 * @var string
 	 */
-	private $log_path = null;
+	private $log_path = '';
 
 	/**
 	 * Weather to log daemon's output or not.
@@ -86,7 +86,7 @@ class PHPDaemon
 	/**
 	 * Class constructor.
 	 *
-	 * @param  string $script  Script to start with.
+	 * @param  string $script  Script to daemonize.
 	 * @param  string $binary  The binary to use.
 	 * @param  array  $options Log and logpath options.
 	 * @return void
@@ -157,7 +157,6 @@ class PHPDaemon
 	private function checkPID($pid)
 	{
 		$running = false;
-
 		try
 		{
 			if (!($running = exec("ps -p $pid| grep $pid -c") > 0))
@@ -274,8 +273,8 @@ class PHPDaemon
 	 * Also receives a script and sets it, then it runs it.
 	 *
 	 * @param  string $script Optional script to start.
-	 * @throws Exception Could not init.
-	 * @throws Exception Could not save pid.
+	 * @throws Exception      Could not init.
+	 * @throws Exception      Could not save pid.
 	 * @return boolean
 	 */
 	public function start()
