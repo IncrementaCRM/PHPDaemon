@@ -4,7 +4,7 @@ With PHPDaemon you'll be able to run simple one-time daemons in any case
 you find yourself in a situation where you need to run an external script,
 meaning you need a Helper in your web project or what not.
 
-This class works by storing a pid **inside** your script's dir as `script_file.pid`.
+This class works by storing a pid **inside** your script's dir as `.script_file.pid` (files starting wiht `.` are hidden by default).
 
 Script output (logging) will be set in `$options` with the keys `(boolean) log` and `(string) log_path`.
 
@@ -16,7 +16,7 @@ If `log` is set to true and `log_path` is provided and valid it will log into th
 
 
 **Example:**
-For the **pid** `/your/daemon/path/to/script_file.php` would be `/var/run/script_file.php.pid`
+For the **pid** `/your/daemon/path/to/script_file.php` would be `/your/daemon/path/to/.script_file.php.pid`
 and for the **log** `/your/daemon/path/to/script_file.php` without a log_path, it would be `/your/daemon/path/to/script_file.php.log`.
 
 ### PHP Version
@@ -83,7 +83,7 @@ $options = array(
 );
 
 // Instance receives 3 arguments.
-$PHPDaemon = new PHPDaemon\PHPDaemon($script, $binary, $options);
+$PHPDaemon = new PHPDaemon($script, $binary, $options);
 ```
 ### Usage — instance handling
 ```
