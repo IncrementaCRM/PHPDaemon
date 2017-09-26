@@ -149,7 +149,7 @@ class PHPDaemon
 			{
 				throw new Exception('Could not initialize process.');
 			}
-			if ($this->log && !@touch($this->log_path) && !@chmod($this->log_path, 0600))
+			if ($this->log && !@touch($this->log_path) && !@chmod($this->log_path, 0644))
 			{
 				throw new Exception('Could not initialize log.');
 			}
