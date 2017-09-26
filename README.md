@@ -28,7 +28,7 @@ Add this library to your [composer](https://packagist.org/packages/adrian0350/ph
 In composer.json:
 ```json
   "require": {
-    "adrian0350/php-daemon": "1.*"
+    "adrian0350/php-daemon": "dev-php5"
   }
 ```
 
@@ -36,7 +36,7 @@ In composer.json:
 
 If you're using bash.
 ```
-$ composer require adrian0350/php-daemon
+$ composer require adrian0350/php-daemon dev-php5
 ```
 
 ### Usage
