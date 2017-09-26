@@ -64,7 +64,7 @@ else
 	}
 	else
 	{
-		echo $PHPDaemon->errors['message'].PHP_EOL;
+		echo $PHPDaemon->error['message'].PHP_EOL;
 	}
 }
 

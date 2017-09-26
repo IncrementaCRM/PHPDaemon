@@ -35,7 +35,7 @@ class PHPDaemon
 	 *
 	 * @var string
 	 */
-	protected $pid = '/var/run/';
+	protected $pid = '/var/run';
 
 	/**
 	 * Script name.
@@ -99,7 +99,7 @@ class PHPDaemon
 	 * @param  array  $options Log and logpath options.
 	 * @return void
 	 */
-	public function __construct($script = '', $binary = '', $options = array())
+	public function __construct($script, $binary, $options = array())
 	{
 		if ($script)
 		{
@@ -107,7 +107,7 @@ class PHPDaemon
 		}
 		if ($binary)
 		{
-			$this->binary = $binary;
+			$this->setBinary($binary);
 		}
 
 		$this->initialize($options);
@@ -124,34 +124,48 @@ class PHPDaemon
 	 */
 	private function initialize($options = array())
 	{
-		$this->pid = "{$this->pid}{$this->script}.pid";
+		try
+		{
+			$this->pid = "{$this->script_path}/.{$this->script}.pid";
 
-		if (is_array($options) && !empty($options))
-		{
-			$this->log      = isset($options['log']) ? (boolean) $options['log'] : false;
-			$this->log_path = isset($options['log_path']) ? (string) $options['log_path'] : '';
+			if (is_array($options) && !empty($options))
+			{
+				$this->log      = isset($options['log']) ? (boolean) $options['log'] : false;
+				$this->log_path = isset($options['log_path']) ? (string) $options['log_path'] : '';
+			}
+			if ($this->log && !is_dir($this->log_path))
+			{
+				$this->log_path = "{$this->script_path}/{$this->script}.log";
+			}
+			else if ($this->log && is_dir($this->log_path))
+			{
+				$this->log_path = "{$this->log_path}/{$this->script}.log";
+			}
+			if (!$this->log)
+			{
+				$this->log_path = '/dev/null';
+			}
+			if (!@touch($this->pid) && !@chmod($this->pid, 0600))
+			{
+				throw new Exception('Could not initialize process.');
+			}
+			if ($this->log && !@touch($this->log_path) && !@chmod($this->log_path, 0600))
+			{
+				throw new Exception('Could not initialize log.');
+			}
 		}
-		if ($this->log && !is_dir($this->log_path))
+		catch (Exception $e)
 		{
-			$this->log_path = "{$this->script_path}/{$this->script}.log";
-		}
-		else if ($this->log && is_dir($this->log_path))
-		{
-			$this->log_path = "{$this->log_path}/{$this->script}.log";
-		}
-		if (!$this->log)
-		{
-			$this->log_path = '/dev/null';
+			$running = false;
+			$this->error = array(
+				'code' => $e->getCode(),
+				'message' => $e->getMessage()
+			) + $this->_error;
+
+			return false;
 		}
 
-		if (!touch($this->pid))
-		{
-			throw new Exception('Could not initialize process.');
-		}
-		if ($this->log && !touch($this->log_path))
-		{
-			throw new Exception('Could not initialize log.');
-		}
+		return true;
 	}
 
 	/**
@@ -323,7 +337,7 @@ class PHPDaemon
 			{
 				throw new Exception('Could not initialize script: '.$this->script);
 			}
-			if (!file_put_contents($this->pid, $daemon_pid))
+			if (!@file_put_contents($this->pid, $daemon_pid))
 			{
 				exec('kill '.$daemon_pid);
 				throw new Exception('Could not save process id "'.$daemon_pid.'"… killing it.');
