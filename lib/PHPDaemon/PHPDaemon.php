@@ -156,7 +156,6 @@ class PHPDaemon
 		}
 		catch (Exception $e)
 		{
-			$running = false;
 			$this->error = array(
 				'code' => $e->getCode(),
 				'message' => $e->getMessage()
