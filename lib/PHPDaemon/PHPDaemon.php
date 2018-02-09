@@ -95,22 +95,18 @@ class PHPDaemon
 	 * Class constructor.
 	 *
 	 * @param  string $script  Script to daemonize.
-	 * @param  string $binary  The binary to use.
 	 * @param  array  $options Log and logpath options.
+	 * @param  string $binary  The binary to use.
 	 * @return void
 	 */
-	public function __construct($script, $binary, $options = array())
+	public function __construct($script, $options = array(), $binary = '')
 	{
-		if ($script)
+		if (!$script)
 		{
-			$this->setScript($script);
-		}
-		if ($binary)
-		{
-			$this->setBinary($binary);
+			throw new Exception('You must pass a script file path.');
 		}
 
-		$this->initialize($options);
+		return self::setScript($script) && self::setBinary($binary) && self::initialize($options);
 	}
 
 	/**
@@ -233,11 +229,37 @@ class PHPDaemon
 	 * Sets the php binary path to run the command with.
 	 *
 	 * @param  string $binary Binary path.
+	 * @throws Exception      If no binary was passed nor found.
 	 * @return void
 	 */
 	private function setBinary($binary)
 	{
-		$this->binary = $binary;
+		try
+		{
+			if ($binary)
+			{
+				$this->binary = $binary;
+			}
+			elseif (defined('PHP_BINARY'))
+			{
+				$this->binary = PHP_BINARY;
+			}
+			else
+			{
+				throw new Exception('No binary file path was given nor found.');
+			}
+		}
+		catch (Exception $e)
+		{
+			$this->error = array(
+				'code' => $e->getCode(),
+				'message' => $e->getMessage()
+			) + $this->_error;
+
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

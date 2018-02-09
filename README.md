@@ -50,16 +50,16 @@ include_once dirname(__FILE__).'/lib/PHPDaemon.php';
 ```
 ### Usage — instantiating
 Prepare three arguments you'll need.
-* Script's **compatible** binary file path.
+* Script's **compatible** binary file path [OPTIONAL].
 * Daemon script file path.
 ```
 /**
- * Binary file path (per se).
+ * Binary file path (per se) [OPTIONAL].
  *  · php
  *  · bash
  *
  * You could run '$ which php' in console
- * and get binary's filepath.
+ * and get binary's filepath or use PHP's (^5.4) constant PHP_BINARY (although it's already being used internally).
  *
  * @var string $binary Binary filepath.
  */
@@ -82,13 +82,11 @@ $options = array(
 	'log_path' => '/your/log/path'
 );
 
-// Instance receives 3 arguments.
-$PHPDaemon = new PHPDaemon\PHPDaemon($script, $binary, $options);
+// Instance receives 3 arguments (binary as optional).
+$PHPDaemon = new PHPDaemon\PHPDaemon($script, $options, $binary);
 ```
 ### Usage — instance handling
 ```
-// First off we want to check if there isn't a
-// script running already and cut its head.
 if ($PHPDaemon->isAlive())
 {
 	echo mb_convert_encoding('&#x1F608;', 'UTF-8', 'HTML-ENTITIES');
@@ -96,7 +94,6 @@ if ($PHPDaemon->isAlive())
 }
 else
 {
-	// Start the daemon else check errors.
 	if ($PHPDaemon->start())
 	{
 		echo 'You\'ve unleashed the beast!'.PHP_EOL;
@@ -109,7 +106,6 @@ else
 ```
 ### Usage — stoping daemonized scripts
 ```
-// Stoping and checking herrors.
 if ($PHPDaemon->stop())
 {
 	echo mb_convert_encoding('&#x1F608;', 'UTF-8', 'HTML-ENTITIES');
